@@ -30,11 +30,11 @@ const MessageIcon = ({ role }: { role: Message["role"] }) => {
     case "system":
       return <Terminal className="h-4 w-4 text-zinc-500" />;
     case "status":
-      return <Info className="h-4 w-4 text-blue-500" />;
+      return <Info className="h-4 w-4 text-blue-600" />;
     case "error":
-      return <AlertCircle className="h-4 w-4 text-destructive" />;
+      return <AlertCircle className="h-4 w-4 text-red-600" />;
     case "success":
-      return <CheckCircle2 className="h-4 w-4 text-emerald-500" />;
+      return <CheckCircle2 className="h-4 w-4 text-emerald-600" />;
     default:
       return null;
   }
@@ -43,13 +43,13 @@ const MessageIcon = ({ role }: { role: Message["role"] }) => {
 const getMessageStyles = (role: Message["role"]) => {
   switch (role) {
     case "system":
-      return "bg-zinc-50 border border-zinc-200";
+      return "text-zinc-600";
     case "status":
-      return "bg-blue-50 border border-blue-200 text-blue-700";
+      return "text-blue-600";
     case "error":
-      return "bg-red-50 border border-red-200 text-red-700";
+      return "text-red-600";
     case "success":
-      return "bg-emerald-50 border border-emerald-200 text-emerald-700";
+      return "text-emerald-600";
     default:
       return "";
   }
@@ -146,7 +146,7 @@ export function ChatDialog({ agentName, isOpen, onClose }: ChatDialogProps) {
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-[800px] w-[90vw]">
         <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2">
+          <DialogTitle className="flex items-center space-x-2 text-zinc-800">
             <Terminal className="h-5 w-5" />
             <span>{agentName} - 运行状态</span>
           </DialogTitle>
@@ -154,21 +154,19 @@ export function ChatDialog({ agentName, isOpen, onClose }: ChatDialogProps) {
 
         <div className="relative">
           <ScrollArea ref={scrollAreaRef} className="h-[400px] w-full pr-4">
-            <div className="space-y-2 font-mono text-sm">
+            <div className="space-y-4 font-mono text-sm">
               {messages.map((message, index) => (
                 <div
                   key={index}
                   className={cn(
-                    "flex items-start space-x-3 p-3 rounded-lg transition-all duration-200 animate-in slide-in-from-bottom-2",
+                    "flex items-start space-x-3",
                     getMessageStyles(message.role)
                   )}
                 >
                   <MessageIcon role={message.role} />
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-xs text-muted-foreground">{message.timestamp}</span>
-                    </div>
-                    <p className="text-sm">{message.content}</p>
+                  <div className="flex-1 flex items-center space-x-3">
+                    <span className="text-xs text-zinc-400 flex-shrink-0">{message.timestamp}</span>
+                    <p>{message.content}</p>
                   </div>
                 </div>
               ))}
@@ -178,8 +176,8 @@ export function ChatDialog({ agentName, isOpen, onClose }: ChatDialogProps) {
           {!autoScroll && messages.length > 0 && (
             <Button
               size="icon"
-              variant="outline"
-              className="absolute bottom-2 right-2 h-8 w-8 rounded-full bg-background border-zinc-200 hover:bg-zinc-50 hover:border-zinc-300"
+              variant="ghost"
+              className="absolute bottom-2 right-2 h-8 w-8 rounded-full hover:bg-zinc-100"
               onClick={scrollToBottom}
               title="滚动到底部"
             >
@@ -196,21 +194,22 @@ export function ChatDialog({ agentName, isOpen, onClose }: ChatDialogProps) {
             placeholder={isLoading ? "执行中..." : "输入指令..."}
             disabled={isLoading}
             className={cn(
-              "font-mono bg-background text-foreground placeholder:text-muted-foreground",
+              "font-mono",
               isLoading && "opacity-50 cursor-not-allowed"
             )}
           />
           <Button 
             onClick={handleSend} 
             size="icon"
+            variant="ghost"
             disabled={isLoading || !input.trim()}
             className={cn(
-              "transition-all",
+              "hover:bg-zinc-100",
               (isLoading || !input.trim()) && "opacity-50 cursor-not-allowed"
             )}
           >
             {isLoading ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-600 border-t-transparent" />
             ) : (
               <Send className="h-4 w-4" />
             )}
