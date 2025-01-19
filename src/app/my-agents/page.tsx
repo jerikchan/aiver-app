@@ -1,8 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { Play, Square, Trash, Plus } from "lucide-react";
+import { Play, Square, Trash, Plus, MessageCircle } from "lucide-react";
 import { ChatDialog } from "@/components/chat-dialog";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface Agent {
   id: string;
@@ -30,6 +34,7 @@ export default function MyAgentsPage() {
   const [agents, setAgents] = useState<Agent[]>(mockAgents);
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isRunningDialog, setIsRunningDialog] = useState(false);
 
   const toggleAgentStatus = (agentId: string) => {
     setAgents((prev) =>
@@ -49,77 +54,100 @@ export default function MyAgentsPage() {
   };
 
   const handleRunAgent = (agent: Agent) => {
-    if (agent.status === "stopped") {
+    if (agent.status === "running") {
       toggleAgentStatus(agent.id);
+      return;
     }
+    
+    toggleAgentStatus(agent.id);
     setSelectedAgent(agent);
     setIsChatOpen(true);
+    setIsRunningDialog(true);
+  };
+
+  const handleOpenChat = (agent: Agent) => {
+    setSelectedAgent(agent);
+    setIsChatOpen(true);
+    setIsRunningDialog(false);
   };
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">我的 Agent</h1>
-        <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+        <Button variant="outline" size="sm">
           <Plus className="h-4 w-4 mr-2" />
           创建 Agent
-        </button>
+        </Button>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {agents.map((agent) => (
-          <div
-            key={agent.id}
-            className="bg-white shadow rounded-lg p-6 space-y-4"
-          >
-            <div>
-              <h3 className="text-lg font-medium">{agent.name}</h3>
-              <p className="text-sm text-gray-500">{agent.description}</p>
-            </div>
-            <div className="flex items-center justify-between">
-              <span
-                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  agent.status === "running"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-gray-100 text-gray-800"
-                }`}
-              >
-                {agent.status === "running" ? "运行中" : "已停止"}
-              </span>
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => handleRunAgent(agent)}
-                  className={`p-2 ${
-                    agent.status === "running"
-                      ? "text-red-600 hover:bg-red-50"
-                      : "text-green-600 hover:bg-green-50"
-                  } rounded-full`}
+          <Card key={agent.id}>
+            <CardHeader className="pb-3">
+              <CardTitle>{agent.name}</CardTitle>
+              <p className="text-sm text-muted-foreground">{agent.description}</p>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <Badge
+                  variant={agent.status === "running" ? "default" : "secondary"}
                 >
-                  {agent.status === "running" ? (
-                    <Square className="h-4 w-4" />
-                  ) : (
-                    <Play className="h-4 w-4" />
+                  {agent.status === "running" ? "运行中" : "已停止"}
+                </Badge>
+                <div className="flex space-x-2">
+                  {agent.status === "running" && (
+                    <Button
+                      onClick={() => handleOpenChat(agent)}
+                      variant="ghost"
+                      size="icon"
+                      className="text-primary"
+                      title="打开对话"
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                    </Button>
                   )}
-                </button>
-                <button
-                  onClick={() => deleteAgent(agent.id)}
-                  className="p-2 text-red-600 hover:bg-red-50 rounded-full"
-                >
-                  <Trash className="h-4 w-4" />
-                </button>
+                  <Button
+                    onClick={() => handleRunAgent(agent)}
+                    variant="ghost"
+                    size="icon"
+                    className={cn(
+                      agent.status === "running"
+                        ? "text-destructive hover:text-destructive"
+                        : "text-primary hover:text-primary"
+                    )}
+                    title={agent.status === "running" ? "停止" : "运行"}
+                  >
+                    {agent.status === "running" ? (
+                      <Square className="h-4 w-4" />
+                    ) : (
+                      <Play className="h-4 w-4" />
+                    )}
+                  </Button>
+                  <Button
+                    onClick={() => deleteAgent(agent.id)}
+                    variant="ghost"
+                    size="icon"
+                    className="text-destructive hover:text-destructive"
+                    title="删除"
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
 
       {selectedAgent && (
         <ChatDialog
+          agentId={selectedAgent.id}
           agentName={selectedAgent.name}
           isOpen={isChatOpen}
           onClose={() => {
             setIsChatOpen(false);
-            if (selectedAgent.status === "running") {
+            if (isRunningDialog && selectedAgent.status === "running") {
               toggleAgentStatus(selectedAgent.id);
             }
           }}

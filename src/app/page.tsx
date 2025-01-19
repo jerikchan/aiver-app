@@ -30,21 +30,21 @@ export default function HomePage() {
         </Link>
       </div>
       <div className="mt-20 grid gap-8 md:grid-cols-3 max-w-5xl">
-        <div className="p-6 bg-white rounded-lg shadow-sm">
+        <div className="p-6 bg-gray-900 border-gray-800 rounded-lg shadow-sm">
           <h3 className="text-lg font-semibold">自动化游戏</h3>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-gray-400">
             通过智能 Agent，实现游戏任务的自动化执行，提升游戏效率
           </p>
         </div>
-        <div className="p-6 bg-white rounded-lg shadow-sm">
+        <div className="p-6 bg-gray-900 border-gray-800 rounded-lg shadow-sm">
           <h3 className="text-lg font-semibold">多样化策略</h3>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-gray-400">
             支持多种游戏策略模板，适配不同的游戏场景和任务需求
           </p>
         </div>
-        <div className="p-6 bg-white rounded-lg shadow-sm">
+        <div className="p-6 bg-gray-900 border-gray-800 rounded-lg shadow-sm">
           <h3 className="text-lg font-semibold">实时监控</h3>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-gray-400">
             提供实时的游戏状态监控和 Agent 运行数据，确保稳定性
           </p>
         </div>
