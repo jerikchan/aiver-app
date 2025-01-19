@@ -142,7 +142,6 @@ export default function MyAgentsPage() {
 
       {selectedAgent && (
         <ChatDialog
-          agentId={selectedAgent.id}
           agentName={selectedAgent.name}
           isOpen={isChatOpen}
           onClose={() => {

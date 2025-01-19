@@ -20,7 +20,6 @@ interface Message {
 }
 
 interface ChatDialogProps {
-  agentId: string;
   agentName: string;
   isOpen: boolean;
   onClose: () => void;
@@ -29,13 +28,13 @@ interface ChatDialogProps {
 const MessageIcon = ({ role }: { role: Message["role"] }) => {
   switch (role) {
     case "system":
-      return <Terminal className="h-4 w-4 text-gray-500" />;
+      return <Terminal className="h-4 w-4 text-zinc-500" />;
     case "status":
       return <Info className="h-4 w-4 text-blue-500" />;
     case "error":
-      return <AlertCircle className="h-4 w-4 text-red-500" />;
+      return <AlertCircle className="h-4 w-4 text-destructive" />;
     case "success":
-      return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+      return <CheckCircle2 className="h-4 w-4 text-emerald-500" />;
     default:
       return null;
   }
@@ -44,19 +43,19 @@ const MessageIcon = ({ role }: { role: Message["role"] }) => {
 const getMessageStyles = (role: Message["role"]) => {
   switch (role) {
     case "system":
-      return "text-gray-300 bg-gray-800/50";
+      return "bg-zinc-50 border border-zinc-200";
     case "status":
-      return "text-blue-300 bg-blue-900/50";
+      return "bg-blue-50 border border-blue-200 text-blue-700";
     case "error":
-      return "text-red-300 bg-red-900/50";
+      return "bg-red-50 border border-red-200 text-red-700";
     case "success":
-      return "text-green-300 bg-green-900/50";
+      return "bg-emerald-50 border border-emerald-200 text-emerald-700";
     default:
       return "";
   }
 };
 
-export function ChatDialog({ agentId, agentName, isOpen, onClose }: ChatDialogProps) {
+export function ChatDialog({ agentName, isOpen, onClose }: ChatDialogProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [autoScroll, setAutoScroll] = useState(true);
@@ -145,9 +144,9 @@ export function ChatDialog({ agentId, agentName, isOpen, onClose }: ChatDialogPr
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-[800px] w-[90vw] bg-gray-900 border-gray-800">
+      <DialogContent className="max-w-[800px] w-[90vw]">
         <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2 text-gray-100">
+          <DialogTitle className="flex items-center space-x-2">
             <Terminal className="h-5 w-5" />
             <span>{agentName} - 运行状态</span>
           </DialogTitle>
@@ -160,14 +159,14 @@ export function ChatDialog({ agentId, agentName, isOpen, onClose }: ChatDialogPr
                 <div
                   key={index}
                   className={cn(
-                    "flex items-start space-x-3 p-2 rounded-lg transition-all duration-200 animate-in slide-in-from-bottom-2",
+                    "flex items-start space-x-3 p-3 rounded-lg transition-all duration-200 animate-in slide-in-from-bottom-2",
                     getMessageStyles(message.role)
                   )}
                 >
                   <MessageIcon role={message.role} />
                   <div className="flex-1 space-y-1">
                     <div className="flex items-center space-x-2">
-                      <span className="text-xs text-gray-500">{message.timestamp}</span>
+                      <span className="text-xs text-muted-foreground">{message.timestamp}</span>
                     </div>
                     <p className="text-sm">{message.content}</p>
                   </div>
@@ -180,11 +179,11 @@ export function ChatDialog({ agentId, agentName, isOpen, onClose }: ChatDialogPr
             <Button
               size="icon"
               variant="outline"
-              className="absolute bottom-2 right-2 h-8 w-8 rounded-full bg-gray-800 border-gray-700 hover:bg-gray-700 hover:border-gray-600"
+              className="absolute bottom-2 right-2 h-8 w-8 rounded-full bg-background border-zinc-200 hover:bg-zinc-50 hover:border-zinc-300"
               onClick={scrollToBottom}
               title="滚动到底部"
             >
-              <ArrowDown className="h-4 w-4 text-gray-400" />
+              <ArrowDown className="h-4 w-4 text-zinc-500" />
             </Button>
           )}
         </div>
@@ -197,7 +196,7 @@ export function ChatDialog({ agentId, agentName, isOpen, onClose }: ChatDialogPr
             placeholder={isLoading ? "执行中..." : "输入指令..."}
             disabled={isLoading}
             className={cn(
-              "font-mono bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-500",
+              "font-mono bg-background text-foreground placeholder:text-muted-foreground",
               isLoading && "opacity-50 cursor-not-allowed"
             )}
           />
@@ -206,12 +205,12 @@ export function ChatDialog({ agentId, agentName, isOpen, onClose }: ChatDialogPr
             size="icon"
             disabled={isLoading || !input.trim()}
             className={cn(
-              "bg-blue-600 hover:bg-blue-700 transition-all",
+              "transition-all",
               (isLoading || !input.trim()) && "opacity-50 cursor-not-allowed"
             )}
           >
             {isLoading ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
             ) : (
               <Send className="h-4 w-4" />
             )}

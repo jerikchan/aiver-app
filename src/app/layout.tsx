@@ -17,10 +17,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <body className={inter.className}>
         <div className="min-h-screen bg-background">
-          <nav className="border-b border-border">
+          <nav className="border-b">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between h-16">
                 <div className="flex">
@@ -32,13 +32,13 @@ export default function RootLayout({
                   <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                     <Link
                       href="/my-agents"
-                      className="border-transparent text-muted-foreground hover:border-border hover:text-foreground inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors"
+                      className="border-transparent text-muted-foreground hover:text-foreground hover:border-foreground inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors"
                     >
                       我的 Agent
                     </Link>
                     <Link
                       href="/agent-store"
-                      className="border-transparent text-muted-foreground hover:border-border hover:text-foreground inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors"
+                      className="border-transparent text-muted-foreground hover:text-foreground hover:border-foreground inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors"
                     >
                       Agent 商店
                     </Link>
